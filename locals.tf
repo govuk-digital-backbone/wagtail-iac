@@ -18,7 +18,10 @@ locals {
     var.wagtail_variables,
     {
       BASE_URL                     = "https://${var.wagtail_domain}"
-      DATABASE_URL                 = local.connection_string
+      DATABASE_NAME                = local.database_name
+      DATABASE_USER                = local.database_username
+      DATABASE_PASSWORD            = local.database_password
+      DATABASE_HOST                = aws_rds_cluster.db.endpoint
       SECRET_KEY                   = random_password.wagtail-secret-key.result
       LOG_LEVEL                    = var.log_level
       TRUST_PROXY                  = "true"
@@ -28,6 +31,7 @@ locals {
       SMTP_PORT                    = "2525"
       SMTP_SECURE                  = "false"
       SMTP_TLS_REJECT_UNAUTHORIZED = "false"
+      DJANGO_SETTINGS_MODULE       = "govuk.settings.dev"
     }
   )
 }
