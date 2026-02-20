@@ -33,8 +33,8 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       image = "${var.image}:${var.image_tag}"
       portMappings = [
         {
-          containerPort = 1337
-          hostPort      = 1337
+          containerPort = 8000
+          hostPort      = 8000
         }
       ]
 
@@ -79,38 +79,38 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
           readOnly      = false
         }
       ]
-    },
-    {
-      name  = "${local.task_name}-smtp"
-      image = "ghcr.io/govuk-digital-backbone/govuk-notify-smtp-relay:latest"
-      portMappings = [
-        {
-          containerPort = 2525
-          hostPort      = 2525
-        }
-      ]
-
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-create-group  = "true" # creates log group if it doesn't exist
-          awslogs-group         = aws_cloudwatch_log_group.smtp.name
-          awslogs-region        = "eu-west-2"
-          awslogs-stream-prefix = "ecs" # shows up as task_name/<container>/<task-id>
-        }
-      }
-
-      "secrets" : [
-        {
-          "name" : "NOTIFY_API_KEY",
-          "valueFrom" : data.aws_ssm_parameter.wagtail-notify-api-key[0].arn
-        },
-        {
-          "name" : "NOTIFY_TEMPLATE_ID",
-          "valueFrom" : data.aws_ssm_parameter.wagtail-notify-template-id[0].arn
-        }
-      ]
     }
+    #{
+    #  name  = "${local.task_name}-smtp"
+    #  image = "ghcr.io/govuk-digital-backbone/govuk-notify-smtp-relay:latest"
+    #  portMappings = [
+    #    {
+    #      containerPort = 2525
+    #      hostPort      = 2525
+    #    }
+    #  ]
+    #
+    #  logConfiguration = {
+    #    logDriver = "awslogs"
+    #    options = {
+    #      awslogs-create-group  = "true" # creates log group if it doesn't exist
+    #      awslogs-group         = aws_cloudwatch_log_group.smtp.name
+    #      awslogs-region        = "eu-west-2"
+    #      awslogs-stream-prefix = "ecs" # shows up as task_name/<container>/<task-id>
+    #    }
+    #  }
+    #
+    #  "secrets" : [
+    #    {
+    #      "name" : "NOTIFY_API_KEY",
+    #      "valueFrom" : data.aws_ssm_parameter.wagtail-notify-api-key[0].arn
+    #    },
+    #    {
+    #      "name" : "NOTIFY_TEMPLATE_ID",
+    #      "valueFrom" : data.aws_ssm_parameter.wagtail-notify-template-id[0].arn
+    #    }
+    #  ]
+    #}
   ])
 }
 
@@ -135,6 +135,6 @@ resource "aws_ecs_service" "ecs_service" {
   load_balancer {
     target_group_arn = aws_lb_target_group.alb_tg.arn
     container_name   = local.task_name
-    container_port   = 1337
+    container_port   = 8000
   }
 }

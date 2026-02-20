@@ -47,8 +47,9 @@ variable "efs_id" {
 }
 
 variable "port" {
-  description = "The port on which the wagtail application will be exposed"
+  description = "The port on which the application will listen"
   type        = number
+  default     = 8000
 }
 
 variable "token_expires_in" {
@@ -107,4 +108,16 @@ variable "enable_execute_command" {
   description = "Flag to enable ECS execute command feature"
   type        = bool
   default     = false
+}
+
+variable "enable_sync_external_content" {
+  description = "Flag to enable synchronization of external content"
+  type        = bool
+  default     = true
+}
+
+variable "sync_external_content_schedule" {
+  description = "The schedule for synchronizing external content"
+  type        = string
+  default     = "cron(10 9,12,15,18 * * ? *)"
 }

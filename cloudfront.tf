@@ -44,12 +44,16 @@ resource "aws_cloudfront_distribution" "this" {
       name  = "X-ALB-Protection"
       value = random_password.cloudfront_origin_header.result
     }
+
+    custom_header {
+      name  = "X-Forwarded-Port"
+      value = "443"
+    }
   }
 
   enabled             = true
   is_ipv6_enabled     = true
   comment             = var.wagtail_domain
-  default_root_object = "index.html"
   http_version        = "http2and3"
 
   aliases = var.bootstrap_step >= 3 ? [var.wagtail_domain] : []

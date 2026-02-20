@@ -17,6 +17,7 @@ locals {
   wagtail_variables = merge(
     var.wagtail_variables,
     {
+      DOMAIN                       = var.wagtail_domain
       BASE_URL                     = "https://${var.wagtail_domain}"
       DATABASE_NAME                = local.database_name
       DATABASE_USER                = local.database_username

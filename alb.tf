@@ -59,7 +59,7 @@ resource "aws_lb_listener_rule" "alb_rule" {
 
 resource "aws_lb_target_group" "alb_tg" {
   name        = "${local.task_name}-tg"
-  port        = 1337
+  port        = 8000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
